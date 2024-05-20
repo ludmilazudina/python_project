@@ -1,0 +1,38 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Word Card</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>{{ exercise.word }}</h1>
+        <img src="{{ exercise.image.url }}" alt="{{ exercise.word }}">
+        <ul class="translations-list">
+        {% for translation in translations %}
+            <li><a href="#" class="translation-link">{{ translation }}</a></li>
+        {% endfor %}
+        </ul>
+    </div>
+
+    <script>
+        var translationLinks = document.getElementsByClassName('translation-link');
+        for (var i = 0; i < translationLinks.length; i++) {
+            translationLinks[i].addEventListener('click', function(event) {
+                event.preventDefault();
+                var selectedTranslation = this.innerText;
+                alert('Верный ответ: ' + '{{ exercise.answer }}' + '\nВаш ответ: ' + selectedTranslation);
+                var currentCardId = {{ exercise.id }};
+                if (currentCardId === {{ last_exercise_id }}) {
+                     window.location.href = '/trainer/finish';
+                } else {
+                    var nextCardId = {{ exercise.id }} + 1;
+                    window.location.href = '/trainer/card/' + nextCardId;
+                }
+            });
+        }
+    </script>
+</body>
+</html>
